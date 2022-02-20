@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker run -p 8000:8000 --network app-tier  -it sd-app uvicorn server:app --app-dir src --host 0.0.0.0
+
