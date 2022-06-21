@@ -192,3 +192,32 @@ starting app
 ```bash
 docker run -p 8000:8000 --network app-tier  -it sd-app uvicorn server:app --app-dir src --host 0.0.0.0
 ```
+
+
+# Running with RedPanda
+
+## Run local redpanda 
+
+```bash
+rpk container start -n 3
+rpk topic create urls-topic --brokers 127.0.0.1:49154,127.0.0.1:49161,127.0.0.1:49162 --partitions 100
+```
+
+copy the brokers list from the above step to the config
+
+
+## running the server
+
+```bash
+
+virtualenv .pyenv
+. .pyenv/bin/activate
+pip instsall -r requirements.txt
+uvicorn server:app --host 0.0.0.0 --port 8000
+```
+
+## curl
+
+```bash
+WS=`curl -X POST localhost:8000/urls --silent  | jq -r '.ws'` && wscat -c "ws://0.0.0.0:8000${WS}"
+```

@@ -13,6 +13,7 @@ async def worker(worker_id):
 
     producer = aiokafka.AIOKafkaProducer(bootstrap_servers=config.KAFKA_SERVER)
 
+
     await producer.start()
     await consumer.start()
 
@@ -47,6 +48,7 @@ async def worker(worker_id):
                     'partition': partition,
                 }
                 response = json.dumps(response).encode('utf-8')
+                print(f'[{worker_id=}] sending repsonse {response=}')
                 await producer.send_and_wait(topic, response)
     finally:
         print(f'[{worker_id=}] bye!')

@@ -1,7 +1,6 @@
 import aiokafka
 import config
 import json
-import asyncio
 
 
 async def publish(request_id, urls):
@@ -15,7 +14,6 @@ async def publish(request_id, urls):
                 'action': 'FETCH',
                 'request_id': request_id,
                 'url': url,
-
             }
 
             msg = json.dumps(msg).encode('utf-8')
@@ -30,5 +28,7 @@ async def publish(request_id, urls):
 
             msg = json.dumps(msg).encode('utf-8')
             await producer.send_and_wait(config.TOPIC, msg, partition=partition)
+    except Exception as e:
+        print('OMG', e)
     finally:
         await producer.stop()
